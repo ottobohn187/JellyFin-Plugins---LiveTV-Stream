@@ -6,6 +6,15 @@
     "description": "Adds a FOX43 live stream plugin page plus playlist, stream, and status endpoints so the channel can be fed into Jellyfin Live TV or external M3U-based tools.",
     "owner": "ottobohn187",
     "category": "Live TV",
-    "versions": []
+    "versions": [
+      {
+        "version": "0.1.0.0",
+        "changelog": "Initial GitHub-backed plugin feed release.",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.0.0.zip",
+        "timestamp": "2026-04-23T17:56:37Z",
+        "checksum": "6ac83ca867c63b03c57f77c499f8cc20"
+      }
+    ]
   }
 ]
