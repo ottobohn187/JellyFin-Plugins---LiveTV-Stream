@@ -1,5 +1,23 @@
 [
   {
+    "guid": "f5bc5c83-b755-483e-8fa7-848e40df274d",
+    "name": "ABC27 Stream",
+    "overview": "Resolve and expose the ABC27 live stream as a Jellyfin-friendly playlist and redirect endpoint.",
+    "description": "Adds an ABC27 live stream plugin page plus playlist, stream, status, and icon endpoints. The stream endpoint resolves a fresh Anvato manifest from the official ABC27 watch-live metadata so short-lived stream tokens can rotate without breaking the local playlist entry.",
+    "owner": "ottobohn187",
+    "category": "Live TV",
+    "versions": [
+      {
+        "version": "0.1.0.0",
+        "changelog": "Initial ABC27 plugin release with dynamic Anvato stream resolution and an embedded channel logo.",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/abc27-stream-0.1.0.0.zip",
+        "timestamp": "2026-04-23T19:19:20Z",
+        "checksum": "f04d1041e05de9202c5606da83906a01"
+      }
+    ]
+  },
+  {
     "guid": "7c1a49f7-08e3-4a78-b79e-2d4cb79353e8",
     "name": "FOX43 Stream",
     "overview": "Expose a FOX43 live stream as a Jellyfin-friendly playlist and redirect endpoint.",
@@ -7,6 +25,14 @@
     "owner": "ottobohn187",
     "category": "Live TV",
     "versions": [
+      {
+        "version": "0.1.1.0",
+        "changelog": "Add an embedded FOX43 channel logo to the generated playlist feed.",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.1.0.zip",
+        "timestamp": "2026-04-23T19:19:17Z",
+        "checksum": "8189343ec2af359754c2ea6a58f65a89"
+      },
       {
         "version": "0.1.0.0",
         "changelog": "Initial GitHub-backed plugin feed release.",
