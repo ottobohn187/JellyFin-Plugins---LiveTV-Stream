@@ -1,21 +1,21 @@
-# FOX43 Stream Jellyfin Plugin
+# ABC27 Stream Jellyfin Plugin
 
 This Jellyfin plugin targets Jellyfin Server 10.11.x. It adds:
 
 - a plugin configuration page
-- `/Plugins/Fox43Stream/playlist.m3u`
-- `/Plugins/Fox43Stream/stream`
-- `/Plugins/Fox43Stream/status`
-- `/Plugins/Fox43Stream/icon.jpg`
+- `/Plugins/Abc27Stream/playlist.m3u`
+- `/Plugins/Abc27Stream/stream`
+- `/Plugins/Abc27Stream/status`
+- `/Plugins/Abc27Stream/icon.jpg`
 
-The default stream URL is the FOX43 HLS URL found in the saved FOX43 watch-page HTML supplied by the user. The generated playlist also includes an embedded FOX43 channel logo for M3U consumers.
+The default configuration uses the ABC27 Anvato player metadata found in the saved ABC27 watch-page HTML supplied by the user. The plugin resolves a fresh HLS manifest on demand so the generated playlist stays usable even when the upstream stream tokens rotate.
 
 ## Build
 
 Install .NET SDK 9.0, then from this folder run:
 
 ```powershell
-cd Jellyfin.Plugin.Fox43Stream
+cd Jellyfin.Plugin.Abc27Stream
 dotnet restore
 dotnet publish -c Release
 ```
@@ -25,20 +25,20 @@ dotnet publish -c Release
 Copy the published files from:
 
 ```text
-Jellyfin.Plugin.Fox43Stream/bin/Release/net9.0/publish/
+Jellyfin.Plugin.Abc27Stream/bin/Release/net9.0/publish/
 ```
 
 into a folder such as:
 
 ```text
-<jellyfin data dir>/plugins/Fox43Stream/
+<jellyfin data dir>/plugins/Abc27Stream/
 ```
 
 Restart Jellyfin.
 
 ## Use
 
-After install, open Dashboard -> My Plugins -> FOX43 Stream.
+After install, open Dashboard -> My Plugins -> ABC27 Stream.
 
 Then use the generated playlist URL as an M3U source in Jellyfin Live TV, Threadfin, or xTeVe.
 

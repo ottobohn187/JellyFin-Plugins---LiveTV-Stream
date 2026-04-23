@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ABC27 Stream</title>
+</head>
+<body>
+<div id="Abc27ConfigPage" data-role="page" class="page type-interior pluginConfigurationPage">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="Abc27ConfigForm">
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="ChannelName">Channel name</label>
+                    <input id="ChannelName" name="ChannelName" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="ChannelNumber">Channel number</label>
+                    <input id="ChannelNumber" name="ChannelNumber" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="TvGuideId">TV guide ID</label>
+                    <input id="TvGuideId" name="TvGuideId" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="VideoApiBaseUrl">ABC27 metadata API base URL</label>
+                    <input id="VideoApiBaseUrl" name="VideoApiBaseUrl" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="VideoId">ABC27 live video ID</label>
+                    <input id="VideoId" name="VideoId" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="Anvack">ABC27 Anvato access key</label>
+                    <input id="Anvack" name="Anvack" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="StreamUrlOverride">Resolved stream URL override</label>
+                    <input id="StreamUrlOverride" name="StreamUrlOverride" type="text" />
+                    <div class="fieldDescription">Leave blank to resolve a fresh ABC27 HLS URL from the official metadata endpoint on every request.</div>
+                </div>
+
+                <label class="checkboxContainer checkboxContainer-withDescription">
+                    <input id="RedirectDirectlyToStream" name="RedirectDirectlyToStream" type="checkbox" />
+                    <span>Redirect /stream to the live HLS URL</span>
+                </label>
+
+                <div>
+                    <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                        <span>Save</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="sectionTitle">Generated endpoints</div>
+            <p><strong>Playlist:</strong> <span id="playlistUrl">(save first)</span></p>
+            <p><strong>Stream redirect:</strong> <span id="streamUrlLocal">(save first)</span></p>
+            <p>Use the playlist URL as the source for an M3U tuner, Threadfin, or xTeVe.</p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            const pluginId = 'f5bc5c83-b755-483e-8fa7-848e40df274d';
+
+            function setGeneratedUrls() {
+                const base = window.location.origin;
+                document.getElementById('playlistUrl').textContent = base + '/Plugins/Abc27Stream/playlist.m3u';
+                document.getElementById('streamUrlLocal').textContent = base + '/Plugins/Abc27Stream/stream';
+            }
+
+            document.querySelector('#Abc27ConfigPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    document.getElementById('ChannelName').value = config.ChannelName || '';
+                    document.getElementById('ChannelNumber').value = config.ChannelNumber || '';
+                    document.getElementById('TvGuideId').value = config.TvGuideId || '';
+                    document.getElementById('VideoApiBaseUrl').value = config.VideoApiBaseUrl || '';
+                    document.getElementById('VideoId').value = config.VideoId || '';
+                    document.getElementById('Anvack').value = config.Anvack || '';
+                    document.getElementById('StreamUrlOverride').value = config.StreamUrlOverride || '';
+                    document.getElementById('RedirectDirectlyToStream').checked = !!config.RedirectDirectlyToStream;
+                    setGeneratedUrls();
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            document.querySelector('#Abc27ConfigForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    config.ChannelName = document.getElementById('ChannelName').value;
+                    config.ChannelNumber = document.getElementById('ChannelNumber').value;
+                    config.TvGuideId = document.getElementById('TvGuideId').value;
+                    config.VideoApiBaseUrl = document.getElementById('VideoApiBaseUrl').value;
+                    config.VideoId = document.getElementById('VideoId').value;
+                    config.Anvack = document.getElementById('Anvack').value;
+                    config.StreamUrlOverride = document.getElementById('StreamUrlOverride').value;
+                    config.RedirectDirectlyToStream = document.getElementById('RedirectDirectlyToStream').checked;
+                    ApiClient.updatePluginConfiguration(pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
+                });
+            });
+        })();
+    </script>
+</div>
+</body>
+</html>

@@ -29,6 +29,19 @@ def load_existing_versions(path: Path, guid: str) -> list[dict]:
     return []
 
 
+def load_manifest(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+
+    if isinstance(data, list):
+        return data
+
+    return []
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--build-yaml", required=True)
@@ -58,17 +71,29 @@ def main() -> None:
         if version.get("version") != current_version["version"]:
             versions.append(version)
 
-    manifest = [
-        {
-            "guid": build["guid"],
-            "name": build["name"],
-            "overview": build["overview"],
-            "description": str(build["description"]).strip(),
-            "owner": build["owner"],
-            "category": build["category"],
-            "versions": versions,
-        }
-    ]
+    manifest = load_manifest(manifest_path)
+
+    plugin_entry = {
+        "guid": build["guid"],
+        "name": build["name"],
+        "overview": build["overview"],
+        "description": str(build["description"]).strip(),
+        "owner": build["owner"],
+        "category": build["category"],
+        "versions": versions,
+    }
+
+    replaced = False
+    for index, plugin in enumerate(manifest):
+        if plugin.get("guid") == build["guid"]:
+            manifest[index] = plugin_entry
+            replaced = True
+            break
+
+    if not replaced:
+        manifest.append(plugin_entry)
+
+    manifest.sort(key=lambda plugin: str(plugin.get("name", "")))
 
     with manifest_path.open("w", encoding="utf-8", newline="\n") as handle:
         json.dump(manifest, handle, indent=2)

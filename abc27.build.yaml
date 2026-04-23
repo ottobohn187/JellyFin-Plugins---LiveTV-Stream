@@ -1,0 +1,17 @@
+name: "ABC27 Stream"
+guid: "f5bc5c83-b755-483e-8fa7-848e40df274d"
+version: "0.1.0.0"
+targetAbi: "10.11.0.0"
+framework: "net9.0"
+overview: "Resolve and expose the ABC27 live stream as a Jellyfin-friendly playlist and redirect endpoint."
+description: >
+  Adds an ABC27 live stream plugin page plus playlist, stream, status, and icon
+  endpoints. The stream endpoint resolves a fresh Anvato manifest from the
+  official ABC27 watch-live metadata so short-lived stream tokens can rotate
+  without breaking the local playlist entry.
+category: "Live TV"
+owner: "ottobohn187"
+artifacts:
+  - "Jellyfin.Plugin.Abc27Stream.dll"
+changelog: >
+  Initial ABC27 plugin release with dynamic Anvato stream resolution and an embedded channel logo.

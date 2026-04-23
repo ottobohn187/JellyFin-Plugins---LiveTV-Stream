@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using Jellyfin.Plugin.Fox43Stream.Configuration;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,10 @@ namespace Jellyfin.Plugin.Fox43Stream.Controllers;
 [Route("Plugins/Fox43Stream")]
 public class Fox43Controller : ControllerBase
 {
+    private const string LogoResourcePath = "Jellyfin.Plugin.Fox43Stream.Assets.fox43-logo.jpg";
     private static PluginConfiguration Config => Plugin.Instance?.Configuration ?? new PluginConfiguration();
+
+    private string IconUrl => $"{Request.Scheme}://{Request.Host}/Plugins/Fox43Stream/icon.jpg";
 
     [HttpGet("status")]
     public IActionResult GetStatus()
@@ -22,9 +26,23 @@ public class Fox43Controller : ControllerBase
             channelNumber = Config.ChannelNumber,
             tvGuideId = Config.TvGuideId,
             streamUrl = Config.StreamUrl,
+            iconUrl = IconUrl,
             playlistUrl = $"{Request.Scheme}://{Request.Host}/Plugins/Fox43Stream/playlist.m3u",
             redirectUrl = $"{Request.Scheme}://{Request.Host}/Plugins/Fox43Stream/stream"
         });
+    }
+
+    [HttpGet("icon.jpg")]
+    [AllowAnonymous]
+    public IActionResult GetIcon()
+    {
+        var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(LogoResourcePath);
+        if (stream is null)
+        {
+            return NotFound();
+        }
+
+        return File(stream, "image/jpeg");
     }
 
     [HttpGet("playlist.m3u")]
@@ -33,7 +51,7 @@ public class Fox43Controller : ControllerBase
     {
         var playlist = new StringBuilder();
         playlist.AppendLine("#EXTM3U");
-        playlist.AppendLine($"#EXTINF:-1 tvg-id=\"{Escape(Config.TvGuideId)}\" tvg-name=\"{Escape(Config.ChannelName)}\" tvg-chno=\"{Escape(Config.ChannelNumber)}\",{Config.ChannelName}");
+        playlist.AppendLine($"#EXTINF:-1 tvg-id=\"{Escape(Config.TvGuideId)}\" tvg-name=\"{Escape(Config.ChannelName)}\" tvg-chno=\"{Escape(Config.ChannelNumber)}\" tvg-logo=\"{Escape(IconUrl)}\",{Config.ChannelName}");
         playlist.AppendLine($"{Request.Scheme}://{Request.Host}/Plugins/Fox43Stream/stream");
 
         return Content(playlist.ToString(), "audio/x-mpegurl", Encoding.UTF8);

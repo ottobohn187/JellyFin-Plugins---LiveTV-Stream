@@ -4,14 +4,14 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RootNamespace>Jellyfin.Plugin.Fox43Stream</RootNamespace>
-    <AssemblyName>Jellyfin.Plugin.Fox43Stream</AssemblyName>
-    <Version>0.1.1.0</Version>
-    <FileVersion>0.1.1.0</FileVersion>
-    <AssemblyVersion>0.1.1.0</AssemblyVersion>
-    <PackageId>Jellyfin.Plugin.Fox43Stream</PackageId>
+    <RootNamespace>Jellyfin.Plugin.Abc27Stream</RootNamespace>
+    <AssemblyName>Jellyfin.Plugin.Abc27Stream</AssemblyName>
+    <Version>0.1.0.0</Version>
+    <FileVersion>0.1.0.0</FileVersion>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <PackageId>Jellyfin.Plugin.Abc27Stream</PackageId>
     <Authors>ottobohn187</Authors>
-    <Description>Jellyfin plugin that exposes a FOX43 live stream, playlist, and channel logo.</Description>
+    <Description>Jellyfin plugin that resolves and exposes the ABC27 live stream, playlist, and channel logo.</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Configuration/configPage.html" />
-    <EmbeddedResource Include="Assets/fox43-logo.jpg" />
+    <EmbeddedResource Include="Assets/abc27-logo.jpg" />
   </ItemGroup>
 </Project>

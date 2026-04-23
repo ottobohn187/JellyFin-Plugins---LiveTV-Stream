@@ -7,7 +7,9 @@ on:
     paths:
       - ".github/workflows/publish-plugin-feed.yml"
       - "Fox43StreamPlugin/**"
+      - "Abc27StreamPlugin/**"
       - "build.yaml"
+      - "abc27.build.yaml"
       - "scripts/update_manifest.py"
   workflow_dispatch:
 
@@ -37,14 +39,14 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install pyyaml
 
-      - name: Restore plugin
+      - name: Restore FOX43 plugin
         run: dotnet restore Fox43StreamPlugin/Jellyfin.Plugin.Fox43Stream/Jellyfin.Plugin.Fox43Stream.csproj
 
-      - name: Publish plugin
-        run: dotnet publish Fox43StreamPlugin/Jellyfin.Plugin.Fox43Stream/Jellyfin.Plugin.Fox43Stream.csproj -c Release -o artifacts/publish
+      - name: Publish FOX43 plugin
+        run: dotnet publish Fox43StreamPlugin/Jellyfin.Plugin.Fox43Stream/Jellyfin.Plugin.Fox43Stream.csproj -c Release -o artifacts/fox43
 
-      - name: Read plugin version
-        id: version
+      - name: Read FOX43 plugin version
+        id: fox43_version
         run: |
           python - <<'PY'
           import os
@@ -55,12 +57,12 @@ jobs:
               handle.write(f"version={data['version']}\n")
           PY
 
-      - name: Package plugin
-        id: package
+      - name: Package FOX43 plugin
+        id: fox43_package
         run: |
           mkdir -p packages
-          zip_path="packages/fox43-stream-${{ steps.version.outputs.version }}.zip"
-          cd artifacts/publish
+          zip_path="packages/fox43-stream-${{ steps.fox43_version.outputs.version }}.zip"
+          cd artifacts/fox43
           zip -r "../../${zip_path}" .
           cd ../..
           checksum="$(md5sum "${zip_path}" | awk '{print $1}')"
@@ -69,14 +71,55 @@ jobs:
           echo "checksum=${checksum}" >> "${GITHUB_OUTPUT}"
           echo "timestamp=${timestamp}" >> "${GITHUB_OUTPUT}"
 
-      - name: Update manifest
+      - name: Update manifest for FOX43
         run: |
           python scripts/update_manifest.py \
             --build-yaml build.yaml \
             --manifest manifest.json \
-            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.package.outputs.zip_path }}" \
-            --checksum "${{ steps.package.outputs.checksum }}" \
-            --timestamp "${{ steps.package.outputs.timestamp }}"
+            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.fox43_package.outputs.zip_path }}" \
+            --checksum "${{ steps.fox43_package.outputs.checksum }}" \
+            --timestamp "${{ steps.fox43_package.outputs.timestamp }}"
+
+      - name: Restore ABC27 plugin
+        run: dotnet restore Abc27StreamPlugin/Jellyfin.Plugin.Abc27Stream/Jellyfin.Plugin.Abc27Stream.csproj
+
+      - name: Publish ABC27 plugin
+        run: dotnet publish Abc27StreamPlugin/Jellyfin.Plugin.Abc27Stream/Jellyfin.Plugin.Abc27Stream.csproj -c Release -o artifacts/abc27
+
+      - name: Read ABC27 plugin version
+        id: abc27_version
+        run: |
+          python - <<'PY'
+          import os
+          import yaml
+          with open("abc27.build.yaml", "r", encoding="utf-8") as handle:
+              data = yaml.safe_load(handle)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"version={data['version']}\n")
+          PY
+
+      - name: Package ABC27 plugin
+        id: abc27_package
+        run: |
+          mkdir -p packages
+          zip_path="packages/abc27-stream-${{ steps.abc27_version.outputs.version }}.zip"
+          cd artifacts/abc27
+          zip -r "../../${zip_path}" .
+          cd ../..
+          checksum="$(md5sum "${zip_path}" | awk '{print $1}')"
+          timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          echo "zip_path=${zip_path}" >> "${GITHUB_OUTPUT}"
+          echo "checksum=${checksum}" >> "${GITHUB_OUTPUT}"
+          echo "timestamp=${timestamp}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update manifest for ABC27
+        run: |
+          python scripts/update_manifest.py \
+            --build-yaml abc27.build.yaml \
+            --manifest manifest.json \
+            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.abc27_package.outputs.zip_path }}" \
+            --checksum "${{ steps.abc27_package.outputs.checksum }}" \
+            --timestamp "${{ steps.abc27_package.outputs.timestamp }}"
 
       - name: Commit published package
         run: |
