@@ -1,0 +1,11 @@
+[
+  {
+    "guid": "7c1a49f7-08e3-4a78-b79e-2d4cb79353e8",
+    "name": "FOX43 Stream",
+    "overview": "Expose a FOX43 live stream as a Jellyfin-friendly playlist and redirect endpoint.",
+    "description": "Adds a FOX43 live stream plugin page plus playlist, stream, and status endpoints so the channel can be fed into Jellyfin Live TV or external M3U-based tools.",
+    "owner": "ottobohn187",
+    "category": "Live TV",
+    "versions": []
+  }
+]

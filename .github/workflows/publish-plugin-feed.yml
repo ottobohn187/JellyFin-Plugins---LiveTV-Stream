@@ -1,0 +1,91 @@
+name: Publish Plugin Feed
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-plugin-feed.yml"
+      - "Fox43StreamPlugin/**"
+      - "build.yaml"
+      - "scripts/update_manifest.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python dependencies
+        run: python -m pip install pyyaml
+
+      - name: Restore plugin
+        run: dotnet restore Fox43StreamPlugin/Jellyfin.Plugin.Fox43Stream/Jellyfin.Plugin.Fox43Stream.csproj
+
+      - name: Publish plugin
+        run: dotnet publish Fox43StreamPlugin/Jellyfin.Plugin.Fox43Stream/Jellyfin.Plugin.Fox43Stream.csproj -c Release -o artifacts/publish
+
+      - name: Read plugin version
+        id: version
+        run: |
+          python - <<'PY'
+          import os
+          import yaml
+          with open("build.yaml", "r", encoding="utf-8") as handle:
+              data = yaml.safe_load(handle)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"version={data['version']}\n")
+          PY
+
+      - name: Package plugin
+        id: package
+        run: |
+          mkdir -p packages
+          zip_path="packages/fox43-stream-${{ steps.version.outputs.version }}.zip"
+          cd artifacts/publish
+          zip -r "../../${zip_path}" .
+          cd ../..
+          checksum="$(md5sum "${zip_path}" | awk '{print $1}')"
+          timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          echo "zip_path=${zip_path}" >> "${GITHUB_OUTPUT}"
+          echo "checksum=${checksum}" >> "${GITHUB_OUTPUT}"
+          echo "timestamp=${timestamp}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update manifest
+        run: |
+          python scripts/update_manifest.py \
+            --build-yaml build.yaml \
+            --manifest manifest.json \
+            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.package.outputs.zip_path }}" \
+            --checksum "${{ steps.package.outputs.checksum }}" \
+            --timestamp "${{ steps.package.outputs.timestamp }}"
+
+      - name: Commit published package
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add manifest.json packages
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Publish plugin package"
+          git push

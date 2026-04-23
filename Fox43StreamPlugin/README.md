@@ -40,3 +40,11 @@ Restart Jellyfin.
 After install, open Dashboard -> My Plugins -> FOX43 Stream.
 
 Then use the generated playlist URL as an M3U source in Jellyfin Live TV, Threadfin, or xTeVe.
+
+## Install From GitHub Repository
+
+In Jellyfin, open `Dashboard -> Plugins -> Repositories` and add:
+
+`https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/manifest.json`
+
+Once the GitHub publish workflow has produced the package zip and updated the manifest, the plugin will appear in the Jellyfin catalog.
