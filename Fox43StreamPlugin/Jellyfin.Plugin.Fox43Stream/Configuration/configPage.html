@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>FOX43 Stream</title>
+</head>
+<body>
+<div id="Fox43ConfigPage" data-role="page" class="page type-interior pluginConfigurationPage">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="Fox43ConfigForm">
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="ChannelName">Channel name</label>
+                    <input id="ChannelName" name="ChannelName" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="ChannelNumber">Channel number</label>
+                    <input id="ChannelNumber" name="ChannelNumber" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="TvGuideId">TV guide ID</label>
+                    <input id="TvGuideId" name="TvGuideId" type="text" />
+                </div>
+
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="StreamUrl">FOX43 HLS URL</label>
+                    <input id="StreamUrl" name="StreamUrl" type="text" />
+                    <div class="fieldDescription">This defaults to the HLS URL found in your saved FOX43 watch-page HTML.</div>
+                </div>
+
+                <label class="checkboxContainer checkboxContainer-withDescription">
+                    <input id="RedirectDirectlyToStream" name="RedirectDirectlyToStream" type="checkbox" />
+                    <span>Redirect /stream to the live HLS URL</span>
+                </label>
+
+                <div>
+                    <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                        <span>Save</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="sectionTitle">Generated endpoints</div>
+            <p><strong>Playlist:</strong> <span id="playlistUrl">(save first)</span></p>
+            <p><strong>Stream redirect:</strong> <span id="streamUrlLocal">(save first)</span></p>
+            <p>Use the playlist URL as the source for an M3U tuner, Threadfin, or xTeVe.</p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            const pluginId = '7c1a49f7-08e3-4a78-b79e-2d4cb79353e8';
+
+            function setGeneratedUrls() {
+                const base = window.location.origin;
+                document.getElementById('playlistUrl').textContent = base + '/Plugins/Fox43Stream/playlist.m3u';
+                document.getElementById('streamUrlLocal').textContent = base + '/Plugins/Fox43Stream/stream';
+            }
+
+            document.querySelector('#Fox43ConfigPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    document.getElementById('ChannelName').value = config.ChannelName || '';
+                    document.getElementById('ChannelNumber').value = config.ChannelNumber || '';
+                    document.getElementById('TvGuideId').value = config.TvGuideId || '';
+                    document.getElementById('StreamUrl').value = config.StreamUrl || '';
+                    document.getElementById('RedirectDirectlyToStream').checked = !!config.RedirectDirectlyToStream;
+                    setGeneratedUrls();
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            document.querySelector('#Fox43ConfigForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                    config.ChannelName = document.getElementById('ChannelName').value;
+                    config.ChannelNumber = document.getElementById('ChannelNumber').value;
+                    config.TvGuideId = document.getElementById('TvGuideId').value;
+                    config.StreamUrl = document.getElementById('StreamUrl').value;
+                    config.RedirectDirectlyToStream = document.getElementById('RedirectDirectlyToStream').checked;
+                    ApiClient.updatePluginConfiguration(pluginId, config).then(Dashboard.processPluginConfigurationUpdateResult);
+                });
+            });
+        })();
+    </script>
+</div>
+</body>
+</html>
