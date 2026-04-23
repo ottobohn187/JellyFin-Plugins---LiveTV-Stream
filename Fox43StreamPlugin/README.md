@@ -24,7 +24,7 @@ dotnet publish -c Release
 Copy the published files from:
 
 ```text
-Jellyfin.Plugin.Fox43Stream/bin/Release/net8.0/publish/
+Jellyfin.Plugin.Fox43Stream/bin/Release/net9.0/publish/
 ```
 
 into a folder such as:

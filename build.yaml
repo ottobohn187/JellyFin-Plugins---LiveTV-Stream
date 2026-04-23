@@ -2,7 +2,7 @@ name: "FOX43 Stream"
 guid: "7c1a49f7-08e3-4a78-b79e-2d4cb79353e8"
 version: "0.1.0.0"
 targetAbi: "10.11.0.0"
-framework: "net8.0"
+framework: "net9.0"
 overview: "Expose a FOX43 live stream as a Jellyfin-friendly playlist and redirect endpoint."
 description: >
   Adds a FOX43 live stream plugin page plus playlist, stream, and status endpoints
