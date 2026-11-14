@@ -12,8 +12,8 @@
         "changelog": "Initial ABC27 plugin release with dynamic Anvato stream resolution and an embedded channel logo.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/abc27-stream-0.1.0.0.zip",
-        "timestamp": "2026-11-14T18:52:52Z",
-        "checksum": "907ba2868504f650c04b252becf8db88"
+        "timestamp": "2026-11-14T18:55:41Z",
+        "checksum": "0a5085d39bd45e8a9a79caf2b85f956a"
       }
     ]
   },
@@ -30,8 +30,8 @@
         "changelog": "Add an embedded FOX43 channel logo to the generated playlist feed.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.1.0.zip",
-        "timestamp": "2026-11-14T18:52:50Z",
-        "checksum": "4fbf60ca78a74210d91fb2593c2bba1e"
+        "timestamp": "2026-11-14T18:55:39Z",
+        "checksum": "4473f04573d12bef898a27abd3f147ac"
       },
       {
         "version": "0.1.0.0",
@@ -56,8 +56,8 @@
         "changelog": "Resolve playback items from active Jellyfin sessions when the video route or media URL does not contain an item ID, and allow authenticated viewers to read the selected-library settings.",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/music-video-visualizer-0.1.1.0.zip",
-        "timestamp": "2026-11-14T18:52:57Z",
-        "checksum": "e79baccfbdc2c5afdcd25c09409457cb"
+        "timestamp": "2026-11-14T18:55:48Z",
+        "checksum": "10ca47fff2344f522ff58e73fd54b2c3"
       },
       {
         "version": "0.1.0.0",
@@ -82,8 +82,8 @@
         "changelog": "Render native dashboard rows using Jellyfin 12.4's parallel label and value stacks.",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/release-watcher-1.2.3.0.zip",
-        "timestamp": "2026-11-14T18:52:55Z",
-        "checksum": "82992e1cc2a7212d02b2ce092c290dcf"
+        "timestamp": "2026-11-14T18:55:47Z",
+        "checksum": "47fdcf672c7e6c5dcd6c28935e99e756"
       },
       {
         "version": "1.2.2.0",
