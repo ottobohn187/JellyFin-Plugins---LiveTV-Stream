@@ -26,3 +26,4 @@ debug-dashboard.png
 debug-output*.txt
 installed-browser-test.txt
 artifacts-local/
+.visualizer-token.local
