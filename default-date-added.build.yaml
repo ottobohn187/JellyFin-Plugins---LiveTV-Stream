@@ -1,0 +1,11 @@
+name: "Default Date Added Sort"
+guid: "36f9e2f1-c26c-4c58-a334-e5bb508c2855"
+version: "1.0.0.0"
+targetAbi: "12.4.0.0"
+framework: "net10.0"
+overview: "Default every user's library views to Date Added descending."
+description: "Seeds Date Added descending as the initial sort for every user and library while allowing later user changes."
+category: "General"
+owner: "ottobohn187"
+artifacts: ["Jellyfin.Plugin.DefaultDateAdded.dll"]
+changelog: "Initial release."

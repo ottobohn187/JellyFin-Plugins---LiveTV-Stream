@@ -10,10 +10,12 @@ on:
       - "Abc27StreamPlugin/**"
       - "ReleaseWatcherPlugin/**"
       - "MusicVideoVisualizerPlugin/**"
+      - "DefaultDateAddedPlugin/**"
       - "build.yaml"
       - "abc27.build.yaml"
       - "release-watcher.build.yaml"
       - "music-video-visualizer.build.yaml"
+      - "default-date-added.build.yaml"
       - "scripts/update_manifest.py"
   workflow_dispatch:
 
@@ -206,6 +208,26 @@ jobs:
             --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.music_video_visualizer_package.outputs.zip_path }}" \
             --checksum "${{ steps.music_video_visualizer_package.outputs.checksum }}" \
             --timestamp "${{ steps.music_video_visualizer_package.outputs.timestamp }}"
+
+      - name: Build and package Default Date Added
+        id: default_date_added_package
+        run: |
+          dotnet publish DefaultDateAddedPlugin/Jellyfin.Plugin.DefaultDateAdded/Jellyfin.Plugin.DefaultDateAdded.csproj -c Release -o artifacts/default-date-added
+          mkdir -p packages
+          zip_path="packages/default-date-added-1.0.0.0.zip"
+          (cd artifacts/default-date-added && zip -r "../../${zip_path}" .)
+          echo "zip_path=${zip_path}" >> "${GITHUB_OUTPUT}"
+          echo "checksum=$(md5sum "${zip_path}" | awk '{print $1}')" >> "${GITHUB_OUTPUT}"
+          echo "timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> "${GITHUB_OUTPUT}"
+
+      - name: Update manifest for Default Date Added
+        run: |
+          python scripts/update_manifest.py \
+            --build-yaml default-date-added.build.yaml \
+            --manifest manifest.json \
+            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.default_date_added_package.outputs.zip_path }}" \
+            --checksum "${{ steps.default_date_added_package.outputs.checksum }}" \
+            --timestamp "${{ steps.default_date_added_package.outputs.timestamp }}"
 
       - name: Commit published package
         run: |
