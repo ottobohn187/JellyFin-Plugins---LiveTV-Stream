@@ -77,11 +77,16 @@ public sealed class ReleaseCheckService
                 config.LastCheckedUtc = DateTime.UtcNow;
                 config.LastError = string.Empty;
 
-                if (IsNewer(config.LatestVersion, _applicationHost.ApplicationVersionString) &&
+                var updateAvailable = IsNewer(config.LatestVersion, _applicationHost.ApplicationVersionString);
+                if (updateAvailable &&
                     !string.Equals(config.LastNotifiedVersion, config.LatestVersion, StringComparison.OrdinalIgnoreCase))
                 {
-                    await CreateActivityAsync(config.LatestVersion, config.LatestReleaseUrl).ConfigureAwait(false);
+                    await CreateUpdateAvailableActivityAsync(config.LatestVersion, config.LatestReleaseUrl).ConfigureAwait(false);
                     config.LastNotifiedVersion = config.LatestVersion;
+                }
+                else if (!updateAvailable)
+                {
+                    await CreateUpToDateActivityAsync(config.LatestVersion).ConfigureAwait(false);
                 }
 
                 plugin.SaveConfiguration();
@@ -102,7 +107,7 @@ public sealed class ReleaseCheckService
         }
     }
 
-    private Task CreateActivityAsync(string version, string releaseUrl)
+    private Task CreateUpdateAvailableActivityAsync(string version, string releaseUrl)
     {
         return _activityManager.CreateAsync(new ActivityLog(
             string.Format(CultureInfo.InvariantCulture, "Jellyfin {0} is available", version),
@@ -111,6 +116,18 @@ public sealed class ReleaseCheckService
         {
             ShortOverview = "A newer Jellyfin server release is available.",
             Overview = releaseUrl
+        });
+    }
+
+    private Task CreateUpToDateActivityAsync(string version)
+    {
+        return _activityManager.CreateAsync(new ActivityLog(
+            "Jellyfin update check completed",
+            "JellyfinReleaseCheckCompleted",
+            Guid.Empty)
+        {
+            ShortOverview = string.Format(CultureInfo.InvariantCulture, "Jellyfin {0} is up to date.", version),
+            Overview = "Release Watcher checked the official Jellyfin releases and found no newer stable version."
         });
     }
 
