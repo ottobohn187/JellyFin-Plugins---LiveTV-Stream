@@ -214,7 +214,7 @@ jobs:
         run: |
           dotnet publish DefaultDateAddedPlugin/Jellyfin.Plugin.DefaultDateAdded/Jellyfin.Plugin.DefaultDateAdded.csproj -c Release -o artifacts/default-date-added
           mkdir -p packages
-          zip_path="packages/default-date-added-1.0.0.0.zip"
+          zip_path="packages/default-date-added-1.0.1.0.zip"
           (cd artifacts/default-date-added && zip -r "../../${zip_path}" .)
           echo "zip_path=${zip_path}" >> "${GITHUB_OUTPUT}"
           echo "checksum=$(md5sum "${zip_path}" | awk '{print $1}')" >> "${GITHUB_OUTPUT}"
