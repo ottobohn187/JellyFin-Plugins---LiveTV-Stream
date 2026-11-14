@@ -6,9 +6,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Jellyfin.Plugin.ReleaseWatcher</RootNamespace>
     <AssemblyName>Jellyfin.Plugin.ReleaseWatcher</AssemblyName>
-    <Version>1.2.1.0</Version>
-    <FileVersion>1.2.1.0</FileVersion>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <Version>1.2.2.0</Version>
+    <FileVersion>1.2.2.0</FileVersion>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
     <PackageId>Jellyfin.Plugin.ReleaseWatcher</PackageId>
     <Authors>ottobohn187</Authors>
     <Description>Checks official Jellyfin releases and alerts administrators when an update is available.</Description>
