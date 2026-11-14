@@ -25,14 +25,30 @@
         const fromHash = new URLSearchParams(query).get('id');
         if (fromHash) return fromHash;
         const match = (video.currentSrc || video.src || '').match(/(?:Videos|Audio)\/([a-f0-9]{32})/i);
-        return match && match[1];
+        if (match) return match[1];
+        const itemHost = video.closest('[data-id]') || document.querySelector('.videoOsdPage [data-id]');
+        return itemHost?.dataset?.id;
+    }
+
+    async function getPlayingItemId(video, userId) {
+        const directId = getItemId(video);
+        if (directId) return directId;
+        const sessions = await api('Sessions?ControllableByUserId=' + encodeURIComponent(userId));
+        const deviceId = typeof ApiClient.deviceId === 'function' ? ApiClient.deviceId() : null;
+        const current = sessions.find(session =>
+            (session.NowPlayingItem || session.nowPlayingItem) &&
+            (!deviceId || String(session.DeviceId || session.deviceId) === String(deviceId))
+        ) || sessions.find(session => session.NowPlayingItem || session.nowPlayingItem);
+        const item = current && (current.NowPlayingItem || current.nowPlayingItem);
+        return item && (item.Id || item.id);
     }
 
     async function isSelectedVideo(video, settings) {
-        const itemId = getItemId(video);
-        if (!itemId || !settings.LibraryIds?.length || !window.ApiClient) return false;
+        if (!settings.LibraryIds?.length || !window.ApiClient) return false;
         const userId = ApiClient.getCurrentUserId && ApiClient.getCurrentUserId();
         if (!userId) return false;
+        const itemId = await getPlayingItemId(video, userId);
+        if (!itemId) return false;
         const [item, ancestors] = await Promise.all([
             api('Users/' + userId + '/Items/' + itemId),
             api('Items/' + itemId + '/Ancestors')

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Jellyfin.Plugin.MusicVideoVisualizer.Controllers;
 
 [ApiController]
-[Authorize(Policy = Policies.RequiresElevation)]
+[Authorize]
 [Route("Plugins/MusicVideoVisualizer")]
 public sealed class VisualizerController : ControllerBase
 {
