@@ -12,8 +12,8 @@
         "changelog": "Initial ABC27 plugin release with dynamic Anvato stream resolution and an embedded channel logo.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/abc27-stream-0.1.0.0.zip",
-        "timestamp": "2026-04-23T19:19:20Z",
-        "checksum": "f04d1041e05de9202c5606da83906a01"
+        "timestamp": "2026-11-14T17:03:31Z",
+        "checksum": "db546ddc096a8c9e3b79194a223e3514"
       }
     ]
   },
@@ -30,8 +30,8 @@
         "changelog": "Add an embedded FOX43 channel logo to the generated playlist feed.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.1.0.zip",
-        "timestamp": "2026-04-23T19:19:17Z",
-        "checksum": "8189343ec2af359754c2ea6a58f65a89"
+        "timestamp": "2026-11-14T17:03:28Z",
+        "checksum": "795f4c93cff38b6bdeb6fc5d6509a0b5"
       },
       {
         "version": "0.1.0.0",
@@ -40,6 +40,24 @@
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.0.0.zip",
         "timestamp": "2026-04-23T17:56:37Z",
         "checksum": "6ac83ca867c63b03c57f77c499f8cc20"
+      }
+    ]
+  },
+  {
+    "guid": "af89805d-618c-4d9f-b1de-837e29a5ebc0",
+    "name": "Release Watcher",
+    "overview": "Get an administrator alert when a new Jellyfin server release is available.",
+    "description": "Checks official Jellyfin GitHub releases at startup and every 24 hours, compares them with the installed server version, and adds a dashboard activity notification when a newer release is available. It never installs updates.",
+    "owner": "ottobohn187",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release with scheduled stable-release checks, dashboard status, manual checks, and deduplicated administrator alerts.",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/release-watcher-1.0.0.0.zip",
+        "timestamp": "2026-11-14T17:03:37Z",
+        "checksum": "4f9ddc4c6917be933565ba29ab65fda2"
       }
     ]
   }
