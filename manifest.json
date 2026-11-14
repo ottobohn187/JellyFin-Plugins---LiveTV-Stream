@@ -12,8 +12,8 @@
         "changelog": "Initial ABC27 plugin release with dynamic Anvato stream resolution and an embedded channel logo.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/abc27-stream-0.1.0.0.zip",
-        "timestamp": "2026-11-14T17:33:09Z",
-        "checksum": "390ec279af232050540f4c131ce35187"
+        "timestamp": "2026-11-14T17:36:37Z",
+        "checksum": "5c8b2da2a4d9a100c7e3eee75ebcb4c6"
       }
     ]
   },
@@ -30,8 +30,8 @@
         "changelog": "Add an embedded FOX43 channel logo to the generated playlist feed.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.1.0.zip",
-        "timestamp": "2026-11-14T17:33:07Z",
-        "checksum": "61fcf95fd3df8dbe8e3eb681be2a0a4c"
+        "timestamp": "2026-11-14T17:36:35Z",
+        "checksum": "67542d88c66e85bb2ebcb717176ec50a"
       },
       {
         "version": "0.1.0.0",
@@ -51,6 +51,14 @@
     "owner": "ottobohn187",
     "category": "General",
     "versions": [
+      {
+        "version": "1.2.1.0",
+        "changelog": "Prevent the dashboard widget observer from refreshing in response to its own status updates.",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/release-watcher-1.2.1.0.zip",
+        "timestamp": "2026-11-14T17:36:43Z",
+        "checksum": "3468adb3f697c51bbadae45d9ae5b20e"
+      },
       {
         "version": "1.2.0.0",
         "changelog": "Add a live Release status and Last update check widget directly beneath Build version on the Jellyfin administrator dashboard.",
