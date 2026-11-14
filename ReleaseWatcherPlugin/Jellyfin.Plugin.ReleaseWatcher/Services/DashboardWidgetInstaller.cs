@@ -9,7 +9,7 @@ namespace Jellyfin.Plugin.ReleaseWatcher.Services;
 public sealed class DashboardWidgetInstaller : IHostedService
 {
     private const string ScriptFileName = "release-watcher-dashboard.js";
-    private const string ScriptTag = "<script defer=\"defer\" src=\"release-watcher-dashboard.js?v=1.2.2\" data-release-watcher-dashboard></script>";
+    private const string ScriptTag = "<script defer=\"defer\" src=\"release-watcher-dashboard.js?v=1.2.3\" data-release-watcher-dashboard></script>";
     private readonly IApplicationPaths _applicationPaths;
     private readonly ILogger<DashboardWidgetInstaller> _logger;
 

@@ -5,27 +5,26 @@
     const checkedId = 'releaseWatcherDashboardChecked';
     let refreshPending = false;
 
-    function ensureRow(container, label, id) {
+    function ensureRow(containers, label, id) {
         let value = document.getElementById(id);
         if (value) {
             return value;
         }
 
-        const labelElement = document.createElement('div');
+        const labelElement = containers.labelTemplate.cloneNode(false);
         labelElement.textContent = label;
-        labelElement.style.fontWeight = '700';
 
-        value = document.createElement('div');
+        value = containers.valueTemplate.cloneNode(false);
         value.id = id;
         value.textContent = 'Checking...';
 
-        container.appendChild(labelElement);
-        container.appendChild(value);
+        containers.labelContainer.appendChild(labelElement);
+        containers.valueContainer.appendChild(value);
         return value;
     }
 
     function findServerInfo() {
-        const labels = Array.from(document.querySelectorAll('div, span'));
+        const labels = Array.from(document.querySelectorAll('p, div, span'));
         const buildLabel = labels.find(function (element) {
             return element.children.length === 0 && element.textContent.trim() === 'Build version';
         });
@@ -34,17 +33,21 @@
             return null;
         }
 
-        let container = buildLabel.parentElement;
-        while (container && container !== document.body) {
-            const text = container.textContent;
-            if (text.includes('Server name') && text.includes('Server version') && text.includes('Web version')) {
-                return container;
-            }
-
-            container = container.parentElement;
+        const labelContainer = buildLabel.parentElement;
+        const rowContainer = labelContainer && labelContainer.parentElement;
+        const valueContainer = rowContainer && Array.from(rowContainer.children).find(function (element) {
+            return element !== labelContainer && element.children.length === labelContainer.children.length;
+        });
+        if (!labelContainer || !valueContainer || !valueContainer.lastElementChild) {
+            return null;
         }
 
-        return null;
+        return {
+            labelContainer: labelContainer,
+            valueContainer: valueContainer,
+            labelTemplate: buildLabel,
+            valueTemplate: valueContainer.lastElementChild
+        };
     }
 
     function getAccessToken() {
@@ -94,12 +97,15 @@
         try {
             const status = await getStatus();
 
-            statusElement.textContent = status.UpdateAvailable
-                ? 'Update available: ' + status.LatestVersion
-                : 'Up to date (' + status.LatestVersion + ')';
-            statusElement.style.color = status.UpdateAvailable ? '#ffb74d' : '#66bb6a';
-            checkedElement.textContent = status.LastCheckedUtc
-                ? new Date(status.LastCheckedUtc).toLocaleString()
+            const updateAvailable = status.UpdateAvailable ?? status.updateAvailable;
+            const latestVersion = status.LatestVersion ?? status.latestVersion;
+            const lastCheckedUtc = status.LastCheckedUtc ?? status.lastCheckedUtc;
+            statusElement.textContent = updateAvailable
+                ? 'Update available: ' + latestVersion
+                : 'Up to date (' + latestVersion + ')';
+            statusElement.style.color = updateAvailable ? '#ffb74d' : '#66bb6a';
+            checkedElement.textContent = lastCheckedUtc
+                ? new Date(lastCheckedUtc).toLocaleString()
                 : 'Not checked yet';
         } catch (error) {
             statusElement.textContent = 'Unable to check';
