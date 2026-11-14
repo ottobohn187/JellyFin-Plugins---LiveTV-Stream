@@ -1,4 +1,4 @@
-# JellyFin Plugins - LiveTV Stream
+# Jellyfin Plugins
 
 Workspace for the Jellyfin LiveTV Stream plugins and related development notes.
 
@@ -10,4 +10,4 @@ Add this URL in Jellyfin under `Dashboard -> Plugins -> Repositories`:
 
 Jellyfin can read that manifest and install the packaged plugin directly from GitHub.
 
-The repository currently contains the FOX43 Stream and ABC27 Stream plugins, and the publish workflow is set up to package both into the same Jellyfin repository feed.
+The repository contains FOX43 Stream, ABC27 Stream, and Release Watcher. The publish workflow packages all three into the same Jellyfin repository feed.

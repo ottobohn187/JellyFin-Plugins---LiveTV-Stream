@@ -8,8 +8,10 @@ on:
       - ".github/workflows/publish-plugin-feed.yml"
       - "Fox43StreamPlugin/**"
       - "Abc27StreamPlugin/**"
+      - "ReleaseWatcherPlugin/**"
       - "build.yaml"
       - "abc27.build.yaml"
+      - "release-watcher.build.yaml"
       - "scripts/update_manifest.py"
   workflow_dispatch:
 
@@ -29,7 +31,7 @@ jobs:
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
+          dotnet-version: "10.0.x"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -120,6 +122,47 @@ jobs:
             --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.abc27_package.outputs.zip_path }}" \
             --checksum "${{ steps.abc27_package.outputs.checksum }}" \
             --timestamp "${{ steps.abc27_package.outputs.timestamp }}"
+
+      - name: Restore Release Watcher plugin
+        run: dotnet restore ReleaseWatcherPlugin/Jellyfin.Plugin.ReleaseWatcher/Jellyfin.Plugin.ReleaseWatcher.csproj
+
+      - name: Publish Release Watcher plugin
+        run: dotnet publish ReleaseWatcherPlugin/Jellyfin.Plugin.ReleaseWatcher/Jellyfin.Plugin.ReleaseWatcher.csproj -c Release -o artifacts/release-watcher
+
+      - name: Read Release Watcher plugin version
+        id: release_watcher_version
+        run: |
+          python - <<'PY'
+          import os
+          import yaml
+          with open("release-watcher.build.yaml", "r", encoding="utf-8") as handle:
+              data = yaml.safe_load(handle)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"version={data['version']}\n")
+          PY
+
+      - name: Package Release Watcher plugin
+        id: release_watcher_package
+        run: |
+          mkdir -p packages
+          zip_path="packages/release-watcher-${{ steps.release_watcher_version.outputs.version }}.zip"
+          cd artifacts/release-watcher
+          zip -r "../../${zip_path}" .
+          cd ../..
+          checksum="$(md5sum "${zip_path}" | awk '{print $1}')"
+          timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          echo "zip_path=${zip_path}" >> "${GITHUB_OUTPUT}"
+          echo "checksum=${checksum}" >> "${GITHUB_OUTPUT}"
+          echo "timestamp=${timestamp}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update manifest for Release Watcher
+        run: |
+          python scripts/update_manifest.py \
+            --build-yaml release-watcher.build.yaml \
+            --manifest manifest.json \
+            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.release_watcher_package.outputs.zip_path }}" \
+            --checksum "${{ steps.release_watcher_package.outputs.checksum }}" \
+            --timestamp "${{ steps.release_watcher_package.outputs.timestamp }}"
 
       - name: Commit published package
         run: |

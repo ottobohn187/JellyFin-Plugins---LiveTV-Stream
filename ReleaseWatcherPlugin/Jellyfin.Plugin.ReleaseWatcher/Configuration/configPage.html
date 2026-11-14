@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /><title>Release Watcher</title></head>
+<body>
+<div id="ReleaseWatcherConfigPage" data-role="page" class="page type-interior pluginConfigurationPage">
+  <div data-role="content"><div class="content-primary">
+    <form id="ReleaseWatcherConfigForm">
+      <h2 class="sectionTitle">Jellyfin Release Watcher</h2>
+      <p class="fieldDescription">Checks official Jellyfin releases and alerts administrators. Updates are never installed automatically.</p>
+      <div class="verticalSection">
+        <h3 class="sectionTitle">Status</h3>
+        <p><strong>Installed:</strong> <span id="InstalledVersion">Loading...</span></p>
+        <p><strong>Latest release:</strong> <span id="LatestVersion">Loading...</span></p>
+        <p><strong>Last checked:</strong> <span id="LastChecked">Never</span></p>
+        <p id="UpdateMessage"></p><p id="LastError" style="color:#ff6b6b"></p>
+        <button is="emby-button" type="button" id="CheckNow" class="raised emby-button"><span>Check now</span></button>
+      </div>
+      <div class="verticalSection">
+        <h3 class="sectionTitle">Settings</h3>
+        <label class="checkboxContainer checkboxContainer-withDescription">
+          <input id="IncludePrereleases" type="checkbox" is="emby-checkbox" />
+          <span>Include preview and release-candidate versions</span>
+        </label>
+        <div class="fieldDescription">Leave this off for normal, stable Jellyfin releases.</div>
+      </div>
+      <button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Save</span></button>
+    </form>
+  </div></div>
+  <script type="text/javascript">
+    (function () {
+      const pluginId = 'af89805d-618c-4d9f-b1de-837e29a5ebc0';
+      const page = document.querySelector('#ReleaseWatcherConfigPage');
+      const apiUrl = path => ApiClient.getUrl('Plugins/ReleaseWatcher/' + path);
+      function renderStatus(status) {
+        document.getElementById('InstalledVersion').textContent = status.InstalledVersion || 'Unknown';
+        const latest = document.getElementById('LatestVersion');
+        latest.textContent = status.LatestVersion || 'Not checked';
+        if (status.LatestReleaseUrl) {
+          latest.innerHTML = '';
+          const link = document.createElement('a');
+          link.href = status.LatestReleaseUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
+          link.textContent = status.LatestVersion; latest.appendChild(link);
+        }
+        document.getElementById('LastChecked').textContent = status.LastCheckedUtc ? new Date(status.LastCheckedUtc).toLocaleString() : 'Never';
+        document.getElementById('UpdateMessage').textContent = status.UpdateAvailable ? 'A newer Jellyfin release is available.' : (status.LatestVersion ? 'This server is up to date.' : 'Run a check to retrieve the latest release.');
+        document.getElementById('LastError').textContent = status.LastError || '';
+      }
+      const loadStatus = () => ApiClient.ajax({ type: 'GET', url: apiUrl('status'), dataType: 'json' }).then(renderStatus);
+      page.addEventListener('pageshow', function () {
+        Dashboard.showLoadingMsg();
+        Promise.all([ApiClient.getPluginConfiguration(pluginId).then(config => {
+          document.getElementById('IncludePrereleases').checked = !!config.IncludePrereleases;
+        }), loadStatus()]).finally(() => Dashboard.hideLoadingMsg());
+      });
+      document.getElementById('CheckNow').addEventListener('click', function () {
+        Dashboard.showLoadingMsg();
+        ApiClient.ajax({ type: 'POST', url: apiUrl('check'), dataType: 'json' }).then(renderStatus).finally(() => Dashboard.hideLoadingMsg());
+      });
+      document.getElementById('ReleaseWatcherConfigForm').addEventListener('submit', function (event) {
+        event.preventDefault(); Dashboard.showLoadingMsg();
+        ApiClient.getPluginConfiguration(pluginId).then(config => {
+          config.IncludePrereleases = document.getElementById('IncludePrereleases').checked;
+          return ApiClient.updatePluginConfiguration(pluginId, config);
+        }).then(Dashboard.processPluginConfigurationUpdateResult);
+      });
+    })();
+  </script>
+</div>
+</body>
+</html>

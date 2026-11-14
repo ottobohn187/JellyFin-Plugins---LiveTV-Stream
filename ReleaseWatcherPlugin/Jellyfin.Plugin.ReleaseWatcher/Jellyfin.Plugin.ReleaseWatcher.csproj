@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>Jellyfin.Plugin.ReleaseWatcher</RootNamespace>
+    <AssemblyName>Jellyfin.Plugin.ReleaseWatcher</AssemblyName>
+    <Version>1.0.0.0</Version>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <PackageId>Jellyfin.Plugin.ReleaseWatcher</PackageId>
+    <Authors>ottobohn187</Authors>
+    <Description>Checks official Jellyfin releases and alerts administrators when an update is available.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jellyfin.Controller" Version="12.4.0">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Jellyfin.Model" Version="12.4.0">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration/configPage.html" />
+  </ItemGroup>
+</Project>

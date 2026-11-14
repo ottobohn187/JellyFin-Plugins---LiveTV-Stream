@@ -1,0 +1,16 @@
+name: "Release Watcher"
+guid: "af89805d-618c-4d9f-b1de-837e29a5ebc0"
+version: "1.0.0.0"
+targetAbi: "12.4.0.0"
+framework: "net10.0"
+overview: "Get an administrator alert when a new Jellyfin server release is available."
+description: >
+  Checks official Jellyfin GitHub releases at startup and every 24 hours,
+  compares them with the installed server version, and adds a dashboard activity
+  notification when a newer release is available. It never installs updates.
+category: "General"
+owner: "ottobohn187"
+artifacts:
+  - "Jellyfin.Plugin.ReleaseWatcher.dll"
+changelog: >
+  Initial release with scheduled stable-release checks, dashboard status, manual checks, and deduplicated administrator alerts.
