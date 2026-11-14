@@ -9,9 +9,11 @@ on:
       - "Fox43StreamPlugin/**"
       - "Abc27StreamPlugin/**"
       - "ReleaseWatcherPlugin/**"
+      - "MusicVideoVisualizerPlugin/**"
       - "build.yaml"
       - "abc27.build.yaml"
       - "release-watcher.build.yaml"
+      - "music-video-visualizer.build.yaml"
       - "scripts/update_manifest.py"
   workflow_dispatch:
 
@@ -163,6 +165,47 @@ jobs:
             --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.release_watcher_package.outputs.zip_path }}" \
             --checksum "${{ steps.release_watcher_package.outputs.checksum }}" \
             --timestamp "${{ steps.release_watcher_package.outputs.timestamp }}"
+
+      - name: Restore Music Video Visualizer plugin
+        run: dotnet restore MusicVideoVisualizerPlugin/Jellyfin.Plugin.MusicVideoVisualizer/Jellyfin.Plugin.MusicVideoVisualizer.csproj
+
+      - name: Publish Music Video Visualizer plugin
+        run: dotnet publish MusicVideoVisualizerPlugin/Jellyfin.Plugin.MusicVideoVisualizer/Jellyfin.Plugin.MusicVideoVisualizer.csproj -c Release -o artifacts/music-video-visualizer
+
+      - name: Read Music Video Visualizer plugin version
+        id: music_video_visualizer_version
+        run: |
+          python - <<'PY'
+          import os
+          import yaml
+          with open("music-video-visualizer.build.yaml", "r", encoding="utf-8") as handle:
+              data = yaml.safe_load(handle)
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"version={data['version']}\n")
+          PY
+
+      - name: Package Music Video Visualizer plugin
+        id: music_video_visualizer_package
+        run: |
+          mkdir -p packages
+          zip_path="packages/music-video-visualizer-${{ steps.music_video_visualizer_version.outputs.version }}.zip"
+          cd artifacts/music-video-visualizer
+          zip -r "../../${zip_path}" .
+          cd ../..
+          checksum="$(md5sum "${zip_path}" | awk '{print $1}')"
+          timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          echo "zip_path=${zip_path}" >> "${GITHUB_OUTPUT}"
+          echo "checksum=${checksum}" >> "${GITHUB_OUTPUT}"
+          echo "timestamp=${timestamp}" >> "${GITHUB_OUTPUT}"
+
+      - name: Update manifest for Music Video Visualizer
+        run: |
+          python scripts/update_manifest.py \
+            --build-yaml music-video-visualizer.build.yaml \
+            --manifest manifest.json \
+            --source-url "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/${{ steps.music_video_visualizer_package.outputs.zip_path }}" \
+            --checksum "${{ steps.music_video_visualizer_package.outputs.checksum }}" \
+            --timestamp "${{ steps.music_video_visualizer_package.outputs.timestamp }}"
 
       - name: Commit published package
         run: |

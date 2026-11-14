@@ -1,0 +1,16 @@
+name: "Music Video Visualizer"
+guid: "27ce9073-179f-4f6d-a4e4-26480a80fc64"
+version: "0.1.0.0"
+targetAbi: "12.4.0.0"
+framework: "net10.0"
+overview: "Show a live rainbow spectrum over music videos from selected libraries."
+description: >
+  Adds a configurable Web Audio spectrum overlay to Jellyfin Web playback. An
+  administrator chooses exactly which libraries receive the visualizer and can
+  adjust its bar count, height, and opacity. Other libraries are left untouched.
+category: "General"
+owner: "ottobohn187"
+artifacts:
+  - "Jellyfin.Plugin.MusicVideoVisualizer.dll"
+changelog: >
+  Initial preview with selected-library filtering and a rainbow spectrum canvas.

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /><title>Music Video Visualizer</title></head>
+<body>
+<div id="MusicVideoVisualizerConfigPage" data-role="page" class="page type-interior pluginConfigurationPage">
+  <div data-role="content"><div class="content-primary">
+    <form id="MusicVideoVisualizerConfigForm">
+      <h2 class="sectionTitle">Music Video Visualizer</h2>
+      <p class="fieldDescription">Displays a live rainbow spectrum along the bottom of videos played from selected libraries. Jellyfin Web only.</p>
+      <label class="checkboxContainer checkboxContainer-withDescription">
+        <input id="Enabled" type="checkbox" is="emby-checkbox" />
+        <span>Enable visualizer overlay</span>
+      </label>
+      <div class="verticalSection">
+        <h3 class="sectionTitle">Libraries</h3>
+        <p class="fieldDescription">The overlay will never appear outside the selected libraries.</p>
+        <div id="LibraryChoices">Loading libraries...</div>
+      </div>
+      <div class="inputContainer">
+        <label class="inputLabel inputLabelUnfocused" for="BarCount">Spectrum bars</label>
+        <input id="BarCount" type="number" is="emby-input" min="24" max="128" step="8" />
+      </div>
+      <div class="inputContainer">
+        <label class="inputLabel inputLabelUnfocused" for="HeightPercent">Overlay height (%)</label>
+        <input id="HeightPercent" type="number" is="emby-input" min="10" max="40" />
+      </div>
+      <div class="inputContainer">
+        <label class="inputLabel inputLabelUnfocused" for="Opacity">Opacity (25-100%)</label>
+        <input id="Opacity" type="number" is="emby-input" min="25" max="100" />
+      </div>
+      <button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Save</span></button>
+    </form>
+  </div></div>
+  <script type="text/javascript">
+    (function () {
+      const pluginId = '27ce9073-179f-4f6d-a4e4-26480a80fc64';
+      const page = document.querySelector('#MusicVideoVisualizerConfigPage');
+      let currentConfig;
+
+      function renderLibraries(libraries, selectedIds) {
+        const container = document.getElementById('LibraryChoices');
+        container.innerHTML = '';
+        libraries.forEach(library => {
+          if (!library.ItemId) return;
+          const label = document.createElement('label');
+          label.className = 'checkboxContainer checkboxContainer-withDescription';
+          const input = document.createElement('input');
+          input.type = 'checkbox'; input.setAttribute('is', 'emby-checkbox');
+          input.className = 'visualizerLibrary'; input.value = library.ItemId;
+          input.checked = selectedIds.includes(library.ItemId);
+          const text = document.createElement('span');
+          text.textContent = library.Name + (library.CollectionType ? ' (' + library.CollectionType + ')' : '');
+          label.appendChild(input); label.appendChild(text); container.appendChild(label);
+        });
+      }
+
+      page.addEventListener('pageshow', function () {
+        Dashboard.showLoadingMsg();
+        Promise.all([
+          ApiClient.getPluginConfiguration(pluginId),
+          ApiClient.ajax({ type: 'GET', url: ApiClient.getUrl('Library/VirtualFolders'), dataType: 'json' })
+        ]).then(([config, libraries]) => {
+          currentConfig = config;
+          document.getElementById('Enabled').checked = !!config.Enabled;
+          document.getElementById('BarCount').value = config.BarCount || 64;
+          document.getElementById('HeightPercent').value = config.HeightPercent || 22;
+          document.getElementById('Opacity').value = Math.round((config.Opacity || 0.9) * 100);
+          renderLibraries(libraries, config.LibraryIds || []);
+        }).finally(() => Dashboard.hideLoadingMsg());
+      });
+
+      document.getElementById('MusicVideoVisualizerConfigForm').addEventListener('submit', function (event) {
+        event.preventDefault(); Dashboard.showLoadingMsg();
+        currentConfig.Enabled = document.getElementById('Enabled').checked;
+        currentConfig.LibraryIds = Array.from(document.querySelectorAll('.visualizerLibrary:checked')).map(input => input.value);
+        currentConfig.BarCount = Number(document.getElementById('BarCount').value);
+        currentConfig.HeightPercent = Number(document.getElementById('HeightPercent').value);
+        currentConfig.Opacity = Number(document.getElementById('Opacity').value) / 100;
+        ApiClient.updatePluginConfiguration(pluginId, currentConfig).then(Dashboard.processPluginConfigurationUpdateResult);
+      });
+    })();
+  </script>
+</div>
+</body>
+</html>
