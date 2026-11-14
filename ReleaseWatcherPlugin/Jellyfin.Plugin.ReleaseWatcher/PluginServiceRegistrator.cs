@@ -13,5 +13,6 @@ public sealed class PluginServiceRegistrator : IPluginServiceRegistrator
     {
         serviceCollection.AddHttpClient<ReleaseCheckService>();
         serviceCollection.AddSingleton<IScheduledTask, CheckForJellyfinUpdatesTask>();
+        serviceCollection.AddHostedService<DashboardWidgetInstaller>();
     }
 }
