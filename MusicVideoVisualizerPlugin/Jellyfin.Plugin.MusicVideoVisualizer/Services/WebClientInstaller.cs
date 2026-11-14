@@ -9,7 +9,7 @@ namespace Jellyfin.Plugin.MusicVideoVisualizer.Services;
 public sealed class WebClientInstaller : IHostedService
 {
     private const string ScriptFileName = "music-video-visualizer.js";
-    private const string ScriptTag = "<script defer=\"defer\" src=\"music-video-visualizer.js?v=0.1.1\" data-music-video-visualizer></script>";
+    private const string ScriptTag = "<script defer=\"defer\" src=\"music-video-visualizer.js?v=0.2.0\" data-music-video-visualizer></script>";
     private readonly IApplicationPaths _applicationPaths;
     private readonly ILogger<WebClientInstaller> _logger;
 

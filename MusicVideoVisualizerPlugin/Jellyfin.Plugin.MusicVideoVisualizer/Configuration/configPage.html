@@ -17,6 +17,16 @@
         <div id="LibraryChoices">Loading libraries...</div>
       </div>
       <div class="inputContainer">
+        <label class="inputLabel inputLabelUnfocused" for="Palette">Color palette</label>
+        <select id="Palette" is="emby-select" class="emby-select-withcolor emby-select">
+          <option value="Rainbow">Rainbow</option>
+          <option value="Reds">Reds</option>
+          <option value="Dark">Dark</option>
+          <option value="Bright">Bright</option>
+          <option value="Monochrome">Black &amp; White</option>
+        </select>
+      </div>
+      <div class="inputContainer">
         <label class="inputLabel inputLabelUnfocused" for="BarCount">Spectrum bars</label>
         <input id="BarCount" type="number" is="emby-input" min="24" max="128" step="8" />
       </div>
@@ -65,6 +75,7 @@
           document.getElementById('BarCount').value = config.BarCount || 64;
           document.getElementById('HeightPercent').value = config.HeightPercent || 22;
           document.getElementById('Opacity').value = Math.round((config.Opacity || 0.9) * 100);
+          document.getElementById('Palette').value = config.Palette || 'Rainbow';
           renderLibraries(libraries, config.LibraryIds || []);
         }).finally(() => Dashboard.hideLoadingMsg());
       });
@@ -76,6 +87,7 @@
         currentConfig.BarCount = Number(document.getElementById('BarCount').value);
         currentConfig.HeightPercent = Number(document.getElementById('HeightPercent').value);
         currentConfig.Opacity = Number(document.getElementById('Opacity').value) / 100;
+        currentConfig.Palette = document.getElementById('Palette').value;
         ApiClient.updatePluginConfiguration(pluginId, currentConfig).then(Dashboard.processPluginConfigurationUpdateResult);
       });
     })();

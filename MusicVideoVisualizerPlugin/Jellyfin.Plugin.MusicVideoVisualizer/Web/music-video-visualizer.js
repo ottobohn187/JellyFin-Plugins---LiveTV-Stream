@@ -3,6 +3,13 @@
 
     const overlays = new WeakMap();
     let settingsPromise;
+    const palettes = {
+        Rainbow: ['#ff5733', '#ffd43b', '#32e875', '#22d3ee', '#4f67ff', '#d946ef', '#ff4f91'],
+        Reds: ['#3b0707', '#7f1010', '#c51f1f', '#ff3b30', '#ff735c', '#ffb199'],
+        Dark: ['#050505', '#151126', '#202b46', '#263f48', '#38274f', '#121212'],
+        Bright: ['#fff200', '#39ff14', '#00f5ff', '#2474ff', '#ff35e8', '#ff4d00'],
+        Monochrome: ['#090909', '#343434', '#777777', '#bdbdbd', '#ffffff']
+    };
 
     function api(path) {
         if (window.ApiClient) {
@@ -107,13 +114,8 @@
         const gap = Math.max(1, width / count * 0.18);
         const barWidth = width / count - gap;
         const gradient = context.createLinearGradient(0, 0, width, 0);
-        gradient.addColorStop(0, '#ff5733');
-        gradient.addColorStop(0.18, '#ffd43b');
-        gradient.addColorStop(0.36, '#32e875');
-        gradient.addColorStop(0.54, '#22d3ee');
-        gradient.addColorStop(0.72, '#4f67ff');
-        gradient.addColorStop(0.88, '#d946ef');
-        gradient.addColorStop(1, '#ff4f91');
+        const colors = palettes[settings.Palette] || palettes.Rainbow;
+        colors.forEach((color, index) => gradient.addColorStop(index / (colors.length - 1), color));
         context.fillStyle = gradient;
         for (let index = 0; index < count; index++) {
             const sourceIndex = Math.floor(index / count * values.length * 0.72);
@@ -136,6 +138,7 @@
             settings.BarCount = settings.BarCount ?? settings.barCount ?? 64;
             settings.HeightPercent = settings.HeightPercent ?? settings.heightPercent ?? 22;
             settings.Opacity = settings.Opacity ?? settings.opacity ?? 0.9;
+            settings.Palette = settings.Palette ?? settings.palette ?? 'Rainbow';
             if (!await isSelectedVideo(video, settings)) return;
             const state = createOverlay(video, settings);
             if (state?.audioContext.state === 'suspended') await state.audioContext.resume();

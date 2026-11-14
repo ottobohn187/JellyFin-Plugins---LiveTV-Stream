@@ -13,4 +13,6 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public int HeightPercent { get; set; } = 22;
 
     public double Opacity { get; set; } = 0.9;
+
+    public string Palette { get; set; } = "Rainbow";
 }
