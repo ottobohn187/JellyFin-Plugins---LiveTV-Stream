@@ -12,8 +12,26 @@
         "changelog": "Initial ABC27 plugin release with dynamic Anvato stream resolution and an embedded channel logo.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/abc27-stream-0.1.0.0.zip",
-        "timestamp": "2026-11-14T19:00:25Z",
-        "checksum": "98d6aa8daae39556e6305314a78f25e9"
+        "timestamp": "2026-11-14T19:04:36Z",
+        "checksum": "4ff5409ae2f33b2b4fb6ebaa0fd131ad"
+      }
+    ]
+  },
+  {
+    "guid": "36f9e2f1-c26c-4c58-a334-e5bb508c2855",
+    "name": "Default Date Added Sort",
+    "overview": "Default every user's library views to Date Added descending.",
+    "description": "Seeds Date Added descending as the initial sort for every user and library while allowing later user changes.",
+    "owner": "ottobohn187",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release.",
+        "targetAbi": "12.4.0.0",
+        "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/default-date-added-1.0.0.0.zip",
+        "timestamp": "2026-11-14T19:04:42Z",
+        "checksum": "0c3208e158a0d4b6a24890aa69ff13d1"
       }
     ]
   },
@@ -30,8 +48,8 @@
         "changelog": "Add an embedded FOX43 channel logo to the generated playlist feed.",
         "targetAbi": "10.11.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/fox43-stream-0.1.1.0.zip",
-        "timestamp": "2026-11-14T19:00:23Z",
-        "checksum": "b5d64a45a5256ca4af79148490ef36bf"
+        "timestamp": "2026-11-14T19:04:34Z",
+        "checksum": "26c4fa1b472a306ad1c81702fe90b6ff"
       },
       {
         "version": "0.1.0.0",
@@ -56,8 +74,8 @@
         "changelog": "Add Rainbow, Reds, Dark, Bright, and Black & White color palettes selectable from the plugin settings page.",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/music-video-visualizer-0.2.0.0.zip",
-        "timestamp": "2026-11-14T19:00:33Z",
-        "checksum": "5971b0c201b9c996a6891dc5a84ed845"
+        "timestamp": "2026-11-14T19:04:41Z",
+        "checksum": "b395c616810aaec23397579070263bc7"
       },
       {
         "version": "0.1.1.0",
@@ -90,8 +108,8 @@
         "changelog": "Render native dashboard rows using Jellyfin 12.4's parallel label and value stacks.",
         "targetAbi": "12.4.0.0",
         "sourceUrl": "https://raw.githubusercontent.com/ottobohn187/JellyFin-Plugins---LiveTV-Stream/main/packages/release-watcher-1.2.3.0.zip",
-        "timestamp": "2026-11-14T19:00:30Z",
-        "checksum": "4b539539db2ec8b6dd0f84f5bea07f50"
+        "timestamp": "2026-11-14T19:04:39Z",
+        "checksum": "9218c685406c5173ff612fa57750f95f"
       },
       {
         "version": "1.2.2.0",
