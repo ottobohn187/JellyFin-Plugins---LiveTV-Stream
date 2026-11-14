@@ -17,3 +17,11 @@ desktop.ini
 
 # Local connection files
 *.connection.local.json
+
+# Local browser and dashboard diagnostics
+feature-hub-profile/
+feature-hub-auth.json
+feature-hub-*.js
+debug-dashboard.png
+debug-output*.txt
+installed-browser-test.txt
