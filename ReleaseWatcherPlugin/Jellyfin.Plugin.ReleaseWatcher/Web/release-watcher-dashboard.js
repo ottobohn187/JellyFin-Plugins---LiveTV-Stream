@@ -65,7 +65,11 @@
         window.setTimeout(refreshWidget, 250);
     }
 
-    new MutationObserver(scheduleRefresh).observe(document.documentElement, {
+    new MutationObserver(function () {
+        if (!document.getElementById(statusId)) {
+            scheduleRefresh();
+        }
+    }).observe(document.documentElement, {
         childList: true,
         subtree: true
     });

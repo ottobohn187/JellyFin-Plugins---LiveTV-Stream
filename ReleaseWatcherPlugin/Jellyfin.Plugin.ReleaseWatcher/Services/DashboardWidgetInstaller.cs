@@ -9,7 +9,7 @@ namespace Jellyfin.Plugin.ReleaseWatcher.Services;
 public sealed class DashboardWidgetInstaller : IHostedService
 {
     private const string ScriptFileName = "release-watcher-dashboard.js";
-    private const string ScriptTag = "<script defer=\"defer\" src=\"release-watcher-dashboard.js?v=1.2.0\" data-release-watcher-dashboard></script>";
+    private const string ScriptTag = "<script defer=\"defer\" src=\"release-watcher-dashboard.js?v=1.2.1\" data-release-watcher-dashboard></script>";
     private readonly IApplicationPaths _applicationPaths;
     private readonly ILogger<DashboardWidgetInstaller> _logger;
 
@@ -56,6 +56,15 @@ public sealed class DashboardWidgetInstaller : IHostedService
                 }
 
                 index = index.Replace("</body>", ScriptTag + "</body>", StringComparison.Ordinal);
+                await File.WriteAllTextAsync(indexPath, index, new UTF8Encoding(false), cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                index = System.Text.RegularExpressions.Regex.Replace(
+                    index,
+                    "<script[^>]+data-release-watcher-dashboard[^>]*></script>",
+                    ScriptTag,
+                    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
                 await File.WriteAllTextAsync(indexPath, index, new UTF8Encoding(false), cancellationToken).ConfigureAwait(false);
             }
 
